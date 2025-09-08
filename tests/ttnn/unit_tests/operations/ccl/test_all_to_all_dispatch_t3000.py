@@ -403,10 +403,13 @@ def run_all_to_all_dispatch_test(
         profiler.end("all-to-all-dispatch-trace")
         signpost("stop")
 
-        time_taken = profiler.get_duration("all-to-all-dispatch-trace") - profiler.get_duration(
-            "all-to-all-dispatch-trace-warmup"
-        )
-        logger.info(f"Time taken e2e: {time_taken} s")
+        time_all = profiler.get_duration("all-to-all-dispatch-trace")
+        time_warmup = profiler.get_duration("all-to-all-dispatch-trace-warmup")
+        time_taken = time_all - time_warmup
+
+        logger.info(f"Time taken e2e: {time_all} s, iterations: {num_iters}")
+        logger.info(f"Time warmup e2e: {time_warmup} s, iterations: {warmup_iters}")
+        logger.info(f"Time diff e2e: {time_taken} s")
     else:
         signpost("start")
         tt_out_tensor_list, tt_metadata_list = run_op(num_iters, store_all_results=True)
